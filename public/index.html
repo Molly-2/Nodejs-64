@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest API Query</title>
+</head>
+<body>
+    <h1>Search Pinterest</h1>
+    <form id="search-form">
+        <input type="text" id="query" placeholder="Search for something..." required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const query = document.getElementById('query').value;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Loading...';
+
+            try {
+                const response = await fetch(`/pinterest?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultsDiv.innerHTML = JSON.stringify(data, null, 2);
+                } else {
+                    resultsDiv.innerHTML = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
